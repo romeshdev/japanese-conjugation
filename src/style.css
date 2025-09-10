@@ -46,10 +46,16 @@ input[type="radio"] + label {
 }
 
 #current-streak {
-	left: 0.23rem;
-	float: left;
+
 }
 
+#genki-level {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#current-genki-level-text,
 #current-streak-text,
 #max-streak-text {
 	margin: 0;
@@ -70,8 +76,7 @@ input[type="radio"] + label {
 }
 
 #max-streak {
-	right: 0.23rem;
-	float: right;
+
 }
 
 #toppest-container {
@@ -88,7 +93,6 @@ input[type="radio"] + label {
 	background: rgb(44, 43, 41);
 }
 
-#streak-container:after,
 #settings-child-container:after {
 	content: "";
 	display: table;
@@ -98,6 +102,11 @@ input[type="radio"] + label {
 #streak-container {
 	padding: 0.4rem;
 	padding-top: 0.3rem;
+	
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
 }
 
 #verb-box {
@@ -429,7 +438,7 @@ hr {
 }
 
 .inquery-emoji {
-	font-size: 0.7rem;
+	font-size: 1.7rem;
 	line-height: 1.1;
 }
 

@@ -419,12 +419,12 @@ function levelAllowed(level, settings) {
 
     // Genki I: L1–L12
     if (num >= 1 && num <= 12) {
-        return settings[`genkiIL${num}`] !== false;
+        return settings.genkiI !== false && settings[`genkiIL${num}`] !== false;
     }
 
     // Genki II: L13–L23
     if (num >= 13 && num <= 23) {
-        return settings[`genkiIIL${num}`] !== false;
+        return settings.genkiII !== false && settings[`genkiIIL${num}`] !== false;
     }
 
     // Outside known Genki range, keep by default

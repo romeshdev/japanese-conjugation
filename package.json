@@ -1,5 +1,7 @@
 {
 	"dependencies": {
+		"fs": "^0.0.1-security",
+		"furigana": "^0.19.3",
 		"wanakana": "^5.0.2"
 	},
 	"devDependencies": {

@@ -18,7 +18,7 @@ import {
 	insertSettingsFromUi,
 	getDefaultAdditiveSettings,
 } from "./settingManagement.js";
-import { wordData } from "./wordData.js";
+import { wordData } from "./worddata-genki.js";
 import { CONJUGATION_TYPES, PARTS_OF_SPEECH } from "./wordEnums.js";
 import {
 	toggleDisplayNone,
@@ -124,6 +124,8 @@ function updateCurrentWord(word) {
 	document.getElementById("verb-type").textContent = "\u00A0";
 	document.getElementById("conjugation-inquery-text").innerHTML =
 		conjugationInqueryFormatting(word.conjugation);
+	
+	document.getElementById("current-genki-level-text").textContent = word.wordJSON.levels[0];
 }
 
 function touConjugation(affirmative, polite, conjugationType, isKanji) {
@@ -1153,6 +1155,7 @@ function getConjugation(
 function getAllConjugations(wordJSON) {
 	const allConjugations = [];
 	const partOfSpeech = getPartOfSpeech(wordJSON);
+	const genkiLevels = wordJSON.levels;
 
 	// Get all valid spellings for the base word
 	// For example ["あがる", "上がる", "上る"]

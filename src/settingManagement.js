@@ -1,4 +1,4 @@
-import { CONJUGATION_TYPES, PARTS_OF_SPEECH } from "./wordEnums.js";
+import { CONJUGATION_TYPES, GENKI_LEVEL, PARTS_OF_SPEECH } from "./wordEnums.js";
 import { toggleDisplayNone, createArrayOfArrays } from "./utils.js";
 
 // Enum for radio options that conditionally show/hide UI elements
@@ -127,6 +127,14 @@ export function optionsMenuInit() {
 		.getElementById("adjectives-checkbox")
 		.addEventListener("click", verbAndAdjCheckError);
 
+	
+	document
+		.getElementById("genki-I-checkbox")
+		.addEventListener("click", genkiCheckError);
+	document
+		.getElementById("genki-II-checkbox")
+		.addEventListener("click", genkiCheckError);
+
 	// top level errors
 	const optionsView = document.getElementById("options-view");
 	optionsView.addEventListener("click", verbPresAffPlainCheckError);
@@ -216,6 +224,29 @@ function verbAndAdjCheckError() {
 		!inputs[1].checked
 	);
 	let errorElement = document.getElementById("top-must-choose");
+
+	checkInputsAndToggleError(
+		inputs,
+		errorElement,
+		"*Must choose at least 1 option from this category",
+		false
+	);
+}
+
+function genkiCheckError() {
+	let inputs = [
+		document.querySelector('input[name="genkiI"]'),
+		document.querySelector('input[name="genkiII"]'),
+	];
+	toggleDisplayNone(
+		document.getElementById("genki-I-options-container"),
+		!inputs[0].checked
+	);
+	toggleDisplayNone(
+		document.getElementById("genki-II-options-container"),
+		!inputs[1].checked
+	);
+	let errorElement = document.getElementById("top-must-choose-genki");
 
 	checkInputsAndToggleError(
 		inputs,
@@ -381,6 +412,25 @@ export function applyNonConjugationSettings(settings) {
 	// showTranslation and showFurigana are dependent on the state, so we can't set them here
 }
 
+function levelAllowed(level, settings) {
+    if (!level || !level.startsWith("L")) return true;
+
+    const num = parseInt(level.substring(1), 10);
+
+    // Genki I: L1–L12
+    if (num >= 1 && num <= 12) {
+        return settings[`genkiIL${num}`] !== false;
+    }
+
+    // Genki II: L13–L23
+    if (num >= 13 && num <= 23) {
+        return settings[`genkiIIL${num}`] !== false;
+    }
+
+    // Outside known Genki range, keep by default
+    return true;
+}
+
 export function applyAllSettingsFilterWords(settings, completeWordList) {
 	applyNonConjugationSettings(settings);
 
@@ -422,6 +472,49 @@ export function applyAllSettingsFilterWords(settings, completeWordList) {
 		}
 	}
 
+	if (settings.genkiI === false && settings.genkiII === false) {
+		currentWordList[0] = [];
+		currentWordList[1] = [];
+		return currentWordList;
+	}
+
+	currentWordList[0] = currentWordList[0].filter(word =>
+		word.wordJSON.levels.every(level => levelAllowed(level, settings))
+	);
+
+	currentWordList[1] = currentWordList[1].filter(word =>
+		word.wordJSON.levels.every(level => levelAllowed(level, settings))
+	);
+
+	// for(let verb of currentWordList[1]) {
+	// 	for(let level of verb.wordJSON.levels) {
+	// 		if(settings.genkiI[`genkiI${level}` == false])
+	// 			//remove it
+	// 	}
+	// }
+
+	// console.log("Before first filter", currentWordList[0].length, currentWordList[1].length);
+	// if (settings.genkiI !== false) {
+	// 	// Filter out the levels we don't want for 1 - 12
+	// 	for (let i = 1; i <= 12 + 1; i++) {
+	// 		if (settings[`genkiIL${i}`] === false) {
+	// 			currentWordList[0] = currentWordList[0].filter(word => !word.wordJSON.levels.includes("L"+i));
+	// 			currentWordList[1] = currentWordList[1].filter(word => !word.wordJSON.levels.includes("L"+i));
+	// 		}
+	// 	}
+	// }
+	// console.log("After first filter", currentWordList[0].length, currentWordList[1].length);
+	// console.log("Before second filter", currentWordList[0].length, currentWordList[1].length);
+	// if (settings.genkiII !== false) {
+	// 	for (let i = 12; i <= 23; i++) {
+	// 		if (settings[`genkiIIL${i}`] === false) {
+	// 			currentWordList[0] = currentWordList[0].filter(word => !word.wordJSON.levels.includes("L"+i));
+	// 			currentWordList[1] = currentWordList[1].filter(word => !word.wordJSON.levels.includes("L"+i));
+	// 		}
+	// 	}
+	// }
+
+	// console.log("After second filter", currentWordList[0].length, currentWordList[1].length);
 	return currentWordList;
 }
 
@@ -513,7 +606,7 @@ const questionRemoveFilters = {
 		adjectiveirregular: function (word) {
 			return word.wordJSON.type != "ira";
 		},
-	},
+	}
 };
 
 /**

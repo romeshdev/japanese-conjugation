@@ -25,7 +25,7 @@ export const wordData = {
     {"writing":"ちこくする","reading":"遅刻する","category":"verb","type":"irv","eng":"to be late (for an appointment) ","levels":["L11"],"kanji":"<ruby>遅<rt>ち</rt></ruby><ruby>刻<rt>こく</rt></ruby>する"},
     {"writing":"りゅうがくする","reading":"留学する","category":"verb","type":"irv","eng":"to study abroad ","levels":["L11"],"kanji":"<ruby>留<rt>りゅう</rt></ruby><ruby>学<rt>がく</rt></ruby>する"},
     {"writing":"あるく","reading":"歩く","category":"verb","type":"u","eng":"to walk","levels":["L12"],"kanji":"<ruby>歩<rt>ある</rt></ruby>く"},
-    {"writing":"かぜをひく","reading":"風邪をひく","category":"verb","type":"u","eng":"to catch a cold","levels":["L12"],"kanji":"<ruby>風<rt>かぜ</rt></ruby>邪[]をひく"},
+    {"writing":"かぜをひく","reading":"風邪をひく","category":"verb","type":"u","eng":"to catch a cold","levels":["L12"],"kanji":"<ruby>風<rt>かぜ</rt></ruby>邪をひく"},
     {"writing":"きょうみがある","reading":"興味がある","category":"verb","type":"u","eng":"to be interested (in)","levels":["L12"],"kanji":"<ruby>興<rt>きょう</rt></ruby><ruby>味<rt>み</rt></ruby>がある"},
     {"writing":"なくす","reading":"なくす","category":"verb","type":"u","eng":"to lose","levels":["L12"],"kanji":"なくす"},
     {"writing":"ねつがある","reading":"熱がある","category":"verb","type":"u","eng":"to have a fever","levels":["L12"],"kanji":"<ruby>熱<rt>ねつ</rt></ruby>がある"},

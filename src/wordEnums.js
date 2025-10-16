@@ -3,6 +3,18 @@ export const PARTS_OF_SPEECH = Object.freeze({
 	adjective: "adjective",
 });
 
+export const VERB_TYPE = Object.freeze({
+	u: "u",
+	ru: "ru",
+	irv: "irv",
+});
+
+export const ADJ_TYPE = Object.freeze({
+	i: "i",
+	na: "na",
+	ira: "ira"
+});
+
 export const CONJUGATION_TYPES = Object.freeze({
 	present: "Present",
 	past: "Past",
@@ -13,6 +25,29 @@ export const CONJUGATION_TYPES = Object.freeze({
 	causative: "Causative",
 	potential: "Potential",
 	imperative: "Imperative",
+});
+
+// export const TENSE = Object.freeze({
+// 	present: "present",
+// 	past: "past"
+// });
+
+export const INTENTION = Object.freeze({
+	positive: true,
+	negative: false
+});
+
+export const FORMAILTY = Object.freeze({
+	polite: "polite",
+	casual: "casual"
+});
+
+export const IRREGULAR_TYPES = Object.freeze({
+	iku: ["いく", "行く"],
+	suru: ["する"],
+	kuru: ["くる", "来る"],
+	aru: ["ある"],
+	tou: ["とう", "問う"]
 });
 
 export const GENKI_LEVEL = Object.freeze({

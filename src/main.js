@@ -19,7 +19,7 @@ import {
 	getDefaultAdditiveSettings,
 } from "./settingManagement.js";
 import { wordData } from "./worddata-genki.js";
-import { CONJUGATION_TYPES, PARTS_OF_SPEECH } from "./wordEnums.js";
+import { ADJ_TYPE, CONJUGATION_TYPES, FORMAILTY, INTENTION, IRREGULAR_TYPES, PARTS_OF_SPEECH, VERB_TYPE } from "./wordEnums.js";
 import {
 	toggleDisplayNone,
 	createArrayOfArrays,
@@ -40,15 +40,15 @@ const SCREENS = Object.freeze({
 });
 
 function wordTypeToDisplayText(type) {
-	if (type == "u") {
+	if (type == VERB_TYPE.u) {
 		return "う-verb";
-	} else if (type == "ru") {
+	} else if (type == VERB_TYPE.ru) {
 		return "る-verb";
-	} else if (type == "irv" || type == "ira") {
+	} else if (type == VERB_TYPE.irv || type == ADJ_TYPE.ira) {
 		return "Irregular";
-	} else if (type == "i") {
+	} else if (type == ADJ_TYPE.i) {
 		return "い-adjective";
-	} else if (type == "na") {
+	} else if (type == ADJ_TYPE.na) {
 		return "な-adjective";
 	}
 }
@@ -292,25 +292,15 @@ function kuruConjugation(affirmative, polite, conjugationType, isKanji) {
 
 function suruConjugation(affirmative, polite, conjugationType) {
 	if (conjugationType === CONJUGATION_TYPES.present) {
-		if (affirmative && polite) {
-			return "します";
-		} else if (affirmative && !polite) {
-			return "する";
-		} else if (!affirmative && polite) {
-			return ["しません", "しないです"];
-		} else if (!affirmative && !polite) {
-			return "しない";
-		}
+		if (affirmative && polite) return "します";
+		if (affirmative && !polite) return "する";
+		if (!affirmative && polite) return ["しません", "しないです"];
+		if (!affirmative && !polite) return "しない";
 	} else if (conjugationType === CONJUGATION_TYPES.past) {
-		if (affirmative && polite) {
-			return "しました";
-		} else if (affirmative && !polite) {
-			return "した";
-		} else if (!affirmative && polite) {
-			return ["しませんでした", "しなかったです"];
-		} else if (!affirmative && !polite) {
-			return "しなかった";
-		}
+		if (affirmative && polite) return "しました";
+		if (affirmative && !polite) return "した";
+		if (!affirmative && polite) return ["しませんでした", "しなかったです"];
+		if (!affirmative && !polite) return "しなかった";
 	} else if (conjugationType === CONJUGATION_TYPES.te) {
 		return "して";
 	} else if (conjugationType === CONJUGATION_TYPES.volitional) {
@@ -414,59 +404,49 @@ function checkSuffix(hiraganaWord, suffix) {
 	return hiraganaWord.replace(suffix, "");
 }
 
-function irregularVerbConjugation(
-	hiraganaVerb,
-	affirmative,
-	polite,
-	conjugationType
-) {
+
+function checkSuffix(hiraganaWord, suffixArray) {
+	var match = false;
+	for (let suffix of suffixArray) {
+
+	}
+	for (let i = 1; i <= suffix.length; i++) {
+		if (hiraganaWord[hiraganaWord.length - i] != suffix[suffix.length - i]) {
+			return false;
+		}
+	}
+	return hiraganaWord.replace(suffix, "");
+}
+
+const conjugation = {
+
+	
+	[PARTS_OF_SPEECH.verb]: {
+
+	},
+	[PARTS_OF_SPEECH.adjective]: {
+
+	},
+}
+
+function irregularVerbConjugation(hiraganaVerb, affirmative, polite, conjugationType) {
 	let prefix, conjugatedSuffix;
 	if ((prefix = checkSuffix(hiraganaVerb, "いく")) !== false) {
-		conjugatedSuffix = ikuConjugation(
-			affirmative,
-			polite,
-			conjugationType,
-			false
-		);
+		conjugatedSuffix = ikuConjugation(affirmative, polite, conjugationType, false);
 	} else if ((prefix = checkSuffix(hiraganaVerb, "行く")) !== false) {
-		conjugatedSuffix = ikuConjugation(
-			affirmative,
-			polite,
-			conjugationType,
-			true
-		);
+		conjugatedSuffix = ikuConjugation(affirmative, polite, conjugationType, true);
 	} else if ((prefix = checkSuffix(hiraganaVerb, "する")) !== false) {
 		conjugatedSuffix = suruConjugation(affirmative, polite, conjugationType);
 	} else if ((prefix = checkSuffix(hiraganaVerb, "くる")) !== false) {
-		conjugatedSuffix = kuruConjugation(
-			affirmative,
-			polite,
-			conjugationType,
-			false
-		);
+		conjugatedSuffix = kuruConjugation(affirmative, polite, conjugationType, false);
 	} else if ((prefix = checkSuffix(hiraganaVerb, "来る")) !== false) {
-		conjugatedSuffix = kuruConjugation(
-			affirmative,
-			polite,
-			conjugationType,
-			true
-		);
+		conjugatedSuffix = kuruConjugation(affirmative, polite, conjugationType, true);
 	} else if ((prefix = checkSuffix(hiraganaVerb, "ある")) !== false) {
 		conjugatedSuffix = aruConjugation(affirmative, polite, conjugationType);
 	} else if ((prefix = checkSuffix(hiraganaVerb, "とう")) !== false) {
-		conjugatedSuffix = touConjugation(
-			affirmative,
-			polite,
-			conjugationType,
-			false
-		);
+		conjugatedSuffix = touConjugation(affirmative, polite, conjugationType, false);
 	} else if ((prefix = checkSuffix(hiraganaVerb, "問う")) !== false) {
-		conjugatedSuffix = touConjugation(
-			affirmative,
-			polite,
-			conjugationType,
-			true
-		);
+		conjugatedSuffix = touConjugation(affirmative, polite, conjugationType, true);
 	}
 
 	// There may be multiple correct suffixes
@@ -519,12 +499,7 @@ function iiConjugation(affirmative, polite, conjugationType) {
 	}
 }
 
-function irregularAdjectiveConjugation(
-	hiraganaAdjective,
-	affirmative,
-	polite,
-	conjugationType
-) {
+function irregularAdjectiveConjugation(hiraganaAdjective, affirmative, polite, conjugationType) {
 	if (hiraganaAdjective == "いい") {
 		return iiConjugation(affirmative, polite, conjugationType);
 	} else if (hiraganaAdjective == "かっこいい") {
@@ -667,20 +642,23 @@ function changeUtoE(c) {
 }
 
 function changeToPastPlain(c) {
-	if (c == "す") {
-		return "した";
-	} else if (c == "く") {
-		return "いた";
-	} else if (c == "ぐ") {
-		return "いだ";
-	} else if (c == "む" || c == "ぶ" || c == "ぬ") {
-		return "んだ";
-	} else if (c == "る" || c == "う" || c == "つ") {
-		return "った";
-	} else {
-		console.debug(
-			"Input was not real verb ending changeToPastPlain, was " + c
-		);
+	switch(c){
+		case "す":
+			return "した";
+		case "く":
+			return "いた";
+		case "ぐ":
+			return "いだ";
+		case "す":
+			return "した";
+		case "む":
+		case "ぶ":
+		case "ぬ":
+			return "んだ";
+		case "る":
+		case "う":
+		case "つ":
+			return "った";
 	}
 }
 
@@ -688,18 +666,15 @@ function changeToPastPlain(c) {
  * る is dropped for ichidan, う goes to い for godan
  */
 function masuStem(baseVerbText, type) {
-	return type == "u"
-		? baseVerbText.substring(0, baseVerbText.length - 1) +
-				changeUtoI(baseVerbText.charAt(baseVerbText.length - 1))
+	return type == VERB_TYPE.u
+		? baseVerbText.substring(0, baseVerbText.length - 1) + changeUtoI(baseVerbText.charAt(baseVerbText.length - 1))
 		: baseVerbText.substring(0, baseVerbText.length - 1);
 }
 
 // used by present plain negative and past plain negative
 function plainNegativeComplete(hiraganaVerb, type) {
-	return type == "u"
-		? hiraganaVerb.substring(0, hiraganaVerb.length - 1) +
-				changeUtoA(hiraganaVerb.charAt(hiraganaVerb.length - 1)) +
-				"ない"
+	return type == VERB_TYPE.u
+		? hiraganaVerb.substring(0, hiraganaVerb.length - 1) + changeUtoA(hiraganaVerb.charAt(hiraganaVerb.length - 1)) + "ない"
 		: hiraganaVerb.substring(0, hiraganaVerb.length - 1) + "ない";
 }
 
@@ -710,75 +685,66 @@ function dropFinalLetter(word) {
 // Conjugation functions can return a single string value, or an array of string values
 const conjugationFunctions = {
 	[PARTS_OF_SPEECH.verb]: {
-		[CONJUGATION_TYPES.present]: function (
-			baseVerbText,
-			type,
-			affirmative,
-			polite
-		) {
-			if (type == "irv") {
-				return irregularVerbConjugation(
-					baseVerbText,
-					affirmative,
-					polite,
-					CONJUGATION_TYPES.present
-				);
-			} else if (affirmative && polite) {
+		[CONJUGATION_TYPES.present]: function (baseVerbText, type, affirmative, polite) {
+			if (type == VERB_TYPE.irv) 
+				return irregularVerbConjugation(baseVerbText, affirmative, polite, CONJUGATION_TYPES.present);
+			
+			if (affirmative && polite) 
 				return masuStem(baseVerbText, type) + "ます";
-			} else if (affirmative && !polite) {
+			
+			if (affirmative && !polite)
 				return baseVerbText;
-			} else if (!affirmative && polite) {
+			if (!affirmative && polite) {
 				return [
 					masuStem(baseVerbText, type) + "ません",
 					plainNegativeComplete(baseVerbText, type) + "です",
 				];
-			} else if (!affirmative && !polite) {
+			} 
+			
+			if (!affirmative && !polite)
 				return plainNegativeComplete(baseVerbText, type);
-			}
+			
 		},
-		[CONJUGATION_TYPES.past]: function (
-			baseVerbText,
-			type,
-			affirmative,
-			polite
-		) {
-			if (type == "irv") {
-				return irregularVerbConjugation(
-					baseVerbText,
-					affirmative,
-					polite,
-					CONJUGATION_TYPES.past
-				);
-			} else if (affirmative && polite) {
+		[CONJUGATION_TYPES.past]: function (baseVerbText, type, affirmative, polite) {
+
+			switch(type){
+				case VERB_TYPE.irv:
+					return irregularVerbConjugation(baseVerbText, affirmative, polite, CONJUGATION_TYPES.past);
+				case VERB_TYPE.ru:
+					return irregularVerbConjugation(baseVerbText, affirmative, polite, CONJUGATION_TYPES.past);
+				case VERB_TYPE.u:
+					return irregularVerbConjugation(baseVerbText, affirmative, polite, CONJUGATION_TYPES.past);
+			}
+			
+			if (type == VERB_TYPE.irv)
+				return irregularVerbConjugation(baseVerbText, affirmative, polite, CONJUGATION_TYPES.past);
+			
+			if (affirmative && polite)
 				return masuStem(baseVerbText, type) + "ました";
-			} else if (affirmative && !polite && type == "u") {
-				return (
-					dropFinalLetter(baseVerbText) +
-					changeToPastPlain(baseVerbText.charAt(baseVerbText.length - 1))
-				);
-			} else if (affirmative && !polite && type == "ru") {
+			
+			if (affirmative && !polite && type == VERB_TYPE.u)
+				return (dropFinalLetter(baseVerbText) + changeToPastPlain(baseVerbText.charAt(baseVerbText.length - 1)));
+			
+			if (affirmative && !polite && type == VERB_TYPE.ru)
 				return masuStem(baseVerbText, type) + "た";
-			} else if (!affirmative && polite) {
+
+			if (!affirmative && polite) {
 				let plainNegative = plainNegativeComplete(baseVerbText, type);
 				let plainNegativePast = dropFinalLetter(plainNegative) + "かった";
 				return [
 					masuStem(baseVerbText, type) + "ませんでした",
 					plainNegativePast + "です",
 				];
-			} else if (!affirmative && !polite) {
-				let plainNegative = plainNegativeComplete(baseVerbText, type);
-				return dropFinalLetter(plainNegative) + "かった";
 			}
+
+			if (!affirmative && !polite)
+				return dropFinalLetter(plainNegativeComplete(baseVerbText, type)) + "かった";
 		},
 		[CONJUGATION_TYPES.te]: function (baseVerbText, type) {
-			if (type == "irv") {
-				return irregularVerbConjugation(
-					baseVerbText,
-					false,
-					false,
-					CONJUGATION_TYPES.te
-				);
-			} else if (type == "u") {
+			if (type == VERB_TYPE.irv)
+				return irregularVerbConjugation(baseVerbText, false, false, CONJUGATION_TYPES.te);
+			
+			if (type == VERB_TYPE.u) {
 				let finalChar = baseVerbText.charAt(baseVerbText.length - 1);
 				if (finalChar == "う" || finalChar == "つ" || finalChar == "る") {
 					return dropFinalLetter(baseVerbText) + "って";
@@ -795,19 +761,14 @@ const conjugationFunctions = {
 				} else if (finalChar == "す") {
 					return dropFinalLetter(baseVerbText) + "して";
 				}
-			} else if (type == "ru") {
+			} else if (type == VERB_TYPE.ru) {
 				return masuStem(baseVerbText, type) + "て";
 			}
 		},
 		// Volitional does not distinguish between affirmative and negative,
 		// but take it in as a param so this function's structure matches the other conjugation functions
-		[CONJUGATION_TYPES.volitional]: function (
-			baseVerbText,
-			type,
-			affirmative,
-			polite
-		) {
-			if (type === "irv") {
+		[CONJUGATION_TYPES.volitional]: function (baseVerbText, type, affirmative, polite) {
+			if (type === VERB_TYPE.irv) {
 				return irregularVerbConjugation(
 					baseVerbText,
 					false,
@@ -817,36 +778,49 @@ const conjugationFunctions = {
 			} else if (polite) {
 				return masuStem(baseVerbText, type) + "ましょう";
 			} else if (!polite) {
-				if (type === "u") {
+				if (type === VERB_TYPE.u) {
 					return (
 						dropFinalLetter(baseVerbText) +
 						changeUtoO(baseVerbText.charAt(baseVerbText.length - 1)) +
 						"う"
 					);
-				} else if (type === "ru") {
+				} else if (type === VERB_TYPE.ru) {
 					return masuStem(baseVerbText, type) + "よう";
 				}
 			}
 		},
-		[CONJUGATION_TYPES.passive]: function (
-			baseVerbText,
-			type,
-			affirmative,
-			polite
-		) {
-			if (type === "irv") {
-				return irregularVerbConjugation(
-					baseVerbText,
-					affirmative,
-					polite,
-					CONJUGATION_TYPES.passive
-				);
+		[CONJUGATION_TYPES.passive]: function (baseVerbText, type, affirmative, polite) {
+
+			let res = {
+				[true]: {
+					[true]: {},
+					[false]: {}
+				},
+				[false]: {	
+					[true]: {},
+					[false]: {}
+				}
+			}
+
+			if (type === VERB_TYPE.irv) {
+				return irregularVerbConjugation(baseVerbText, affirmative, polite, CONJUGATION_TYPES.passive);
 			}
 
 			const verbEndingWithA =
 				dropFinalLetter(baseVerbText) +
 				changeUtoA(baseVerbText.charAt(baseVerbText.length - 1));
 
+			// let conjugation = {
+			// 	[INTENTION.positive]: {
+			// 		[FORMAILTY.polite]: "れます",
+			// 		[FORMAILTY.casual]: "れる"
+			// 	},
+			// 	[INTENTION.negative]: {	
+			// 		[FORMAILTY.polite]: "れません",
+			// 		[FORMAILTY.casual]: "れない"
+			// 	}
+			// }[affirmative, polite];
+			// return verbEndingWithA + conjugation;
 			if (affirmative && polite) {
 				return verbEndingWithA + "れます";
 			} else if (affirmative && !polite) {
@@ -857,25 +831,15 @@ const conjugationFunctions = {
 				return verbEndingWithA + "れない";
 			}
 		},
-		[CONJUGATION_TYPES.causative]: function (
-			baseVerbText,
-			type,
-			affirmative,
-			polite
-		) {
-			if (type === "irv") {
-				return irregularVerbConjugation(
-					baseVerbText,
-					affirmative,
-					polite,
-					CONJUGATION_TYPES.causative
-				);
+		[CONJUGATION_TYPES.causative]: function (baseVerbText, type, affirmative, polite) {
+			if (type === VERB_TYPE.irv) {
+				return irregularVerbConjugation(baseVerbText, affirmative, polite, CONJUGATION_TYPES.causative);
 			}
 
 			let verbCausativeRoot;
-			if (type === "ru") {
+			if (type === VERB_TYPE.ru) {
 				verbCausativeRoot = dropFinalLetter(baseVerbText) + "さ";
-			} else if (type === "u") {
+			} else if (type === VERB_TYPE.u) {
 				verbCausativeRoot =
 					dropFinalLetter(baseVerbText) +
 					changeUtoA(baseVerbText.charAt(baseVerbText.length - 1));
@@ -891,28 +855,18 @@ const conjugationFunctions = {
 				return verbCausativeRoot + "せない";
 			}
 		},
-		[CONJUGATION_TYPES.potential]: function (
-			baseVerbText,
-			type,
-			affirmative,
-			polite
-		) {
-			if (type === "irv") {
-				return irregularVerbConjugation(
-					baseVerbText,
-					affirmative,
-					polite,
-					CONJUGATION_TYPES.potential
-				);
+		[CONJUGATION_TYPES.potential]: function (baseVerbText, type, affirmative, polite) {
+			if (type === VERB_TYPE.irv) {
+				return irregularVerbConjugation(baseVerbText, affirmative, polite, CONJUGATION_TYPES.potential);
 			}
 
 			const roots = [];
-			if (type === "u") {
+			if (type === VERB_TYPE.u) {
 				roots.push(
 					dropFinalLetter(baseVerbText) +
 						changeUtoE(baseVerbText.charAt(baseVerbText.length - 1))
 				);
-			} else if (type === "ru") {
+			} else if (type === VERB_TYPE.ru) {
 				// The default spelling should be the dictionary correct "られる",
 				// but also allow the common shortened version "れる".
 				roots.push(dropFinalLetter(baseVerbText) + "られ");
@@ -930,16 +884,11 @@ const conjugationFunctions = {
 			}
 		},
 		[CONJUGATION_TYPES.imperative]: function (baseVerbText, type) {
-			if (type === "irv") {
-				return irregularVerbConjugation(
-					baseVerbText,
-					null,
-					null,
-					CONJUGATION_TYPES.imperative
-				);
+			if (type === VERB_TYPE.irv) {
+				return irregularVerbConjugation(baseVerbText, null, null, CONJUGATION_TYPES.imperative);
 			}
 
-			if (type === "ru") {
+			if (type === VERB_TYPE.ru) {
 				return [
 					dropFinalLetter(baseVerbText) + "ろ",
 					// よ seems to be used as an ending only in written Japanese, but still allow it
@@ -947,7 +896,7 @@ const conjugationFunctions = {
 				];
 			}
 
-			if (type === "u") {
+			if (type === VERB_TYPE.u) {
 				return (
 					dropFinalLetter(baseVerbText) +
 					changeUtoE(baseVerbText.charAt(baseVerbText.length - 1))
@@ -957,82 +906,62 @@ const conjugationFunctions = {
 	},
 
 	[PARTS_OF_SPEECH.adjective]: {
-		[CONJUGATION_TYPES.present]: function (
-			baseAdjectiveText,
-			type,
-			affirmative,
-			polite
-		) {
-			if (type == "ira") {
-				return irregularAdjectiveConjugation(
-					baseAdjectiveText,
-					affirmative,
-					polite,
-					CONJUGATION_TYPES.present
-				);
+		[CONJUGATION_TYPES.present]: function (baseAdjectiveText, type, affirmative, polite) {
+			if (type == ADJ_TYPE.ira) {
+				return irregularAdjectiveConjugation(baseAdjectiveText, affirmative, polite, CONJUGATION_TYPES.present);
 			} else if (affirmative && polite) {
 				return baseAdjectiveText + "です";
-			} else if (affirmative && !polite && type == "i") {
+			} else if (affirmative && !polite && type == ADJ_TYPE.i) {
 				return baseAdjectiveText;
-			} else if (affirmative && !polite && type == "na") {
+			} else if (affirmative && !polite && type == ADJ_TYPE.na) {
 				return baseAdjectiveText + "だ";
-			} else if (!affirmative && polite && type == "i") {
+			} else if (!affirmative && polite && type == ADJ_TYPE.i) {
 				return [
 					dropFinalLetter(baseAdjectiveText) + "くないです",
 					dropFinalLetter(baseAdjectiveText) + "くありません",
 				];
-			} else if (!affirmative && polite && type == "na") {
+			} else if (!affirmative && polite && type == ADJ_TYPE.na) {
 				return [
 					baseAdjectiveText + "じゃないです",
 					baseAdjectiveText + "ではないです",
 					baseAdjectiveText + "じゃありません",
 					baseAdjectiveText + "ではありません",
 				];
-			} else if (!affirmative && !polite && type == "i") {
+			} else if (!affirmative && !polite && type == ADJ_TYPE.i) {
 				return dropFinalLetter(baseAdjectiveText) + "くない";
-			} else if (!affirmative && !polite && type == "na") {
+			} else if (!affirmative && !polite && type == ADJ_TYPE.na) {
 				return [
 					baseAdjectiveText + "じゃない",
 					baseAdjectiveText + "ではない",
 				];
 			}
 		},
-		[CONJUGATION_TYPES.past]: function (
-			baseAdjectiveText,
-			type,
-			affirmative,
-			polite
-		) {
-			if (type == "ira") {
-				return irregularAdjectiveConjugation(
-					baseAdjectiveText,
-					affirmative,
-					polite,
-					CONJUGATION_TYPES.past
-				);
-			} else if (affirmative && polite && type == "i") {
+		[CONJUGATION_TYPES.past]: function (baseAdjectiveText, type, affirmative, polite) {
+			if (type == ADJ_TYPE.ira) {
+				return irregularAdjectiveConjugation(baseAdjectiveText, affirmative, polite, CONJUGATION_TYPES.past);
+			} else if (affirmative && polite && type == ADJ_TYPE.i) {
 				return dropFinalLetter(baseAdjectiveText) + "かったです";
-			} else if (affirmative && polite && type == "na") {
+			} else if (affirmative && polite && type == ADJ_TYPE.na) {
 				return baseAdjectiveText + "でした";
-			} else if (affirmative && !polite && type == "i") {
+			} else if (affirmative && !polite && type == ADJ_TYPE.i) {
 				return dropFinalLetter(baseAdjectiveText) + "かった";
-			} else if (affirmative && !polite && type == "na") {
+			} else if (affirmative && !polite && type == ADJ_TYPE.na) {
 				return baseAdjectiveText + "だった";
-			} else if (!affirmative && polite && type == "i") {
+			} else if (!affirmative && polite && type == ADJ_TYPE.i) {
 				return [
 					dropFinalLetter(baseAdjectiveText) + "くなかったです",
 					dropFinalLetter(baseAdjectiveText) + "くありませんでした",
 				];
-			} else if (!affirmative && polite && type == "na") {
+			} else if (!affirmative && polite && type == ADJ_TYPE.na) {
 				return [
 					baseAdjectiveText + "じゃなかったです",
 					baseAdjectiveText + "ではなかったです",
 					baseAdjectiveText + "じゃありませんでした",
 					baseAdjectiveText + "ではありませんでした",
 				];
-			} else if (!affirmative && !polite && type == "i") {
+			} else if (!affirmative && !polite && type == ADJ_TYPE.i) {
 				return dropFinalLetter(baseAdjectiveText) + "くなかった";
-			} else if (!affirmative && !polite && type == "na") {
+			} else if (!affirmative && !polite && type == ADJ_TYPE.na) {
 				return [
 					baseAdjectiveText + "じゃなかった",
 					baseAdjectiveText + "ではなかった",
@@ -1040,16 +969,11 @@ const conjugationFunctions = {
 			}
 		},
 		[CONJUGATION_TYPES.adverb]: function (baseAdjectiveText, type) {
-			if (type == "ira") {
-				return irregularAdjectiveConjugation(
-					baseAdjectiveText,
-					false,
-					false,
-					CONJUGATION_TYPES.adverb
-				);
-			} else if (type == "i") {
+			if (type == ADJ_TYPE.ira) {
+				return irregularAdjectiveConjugation(baseAdjectiveText, false, false, CONJUGATION_TYPES.adverb);
+			} else if (type == ADJ_TYPE.i) {
 				return dropFinalLetter(baseAdjectiveText) + "く";
-			} else if (type == "na") {
+			} else if (type == ADJ_TYPE.na) {
 				return baseAdjectiveText + "に";
 			}
 		},
@@ -1069,15 +993,15 @@ function toHiragana(wordHtml) {
 // Determines word part of speech based on wordJSON.type
 function getPartOfSpeech(wordJSON) {
 	if (
-		wordJSON.type === "u" ||
-		wordJSON.type === "ru" ||
-		wordJSON.type === "irv"
+		wordJSON.type === VERB_TYPE.u ||
+		wordJSON.type === VERB_TYPE.ru ||
+		wordJSON.type === VERB_TYPE.irv
 	) {
 		return PARTS_OF_SPEECH.verb;
 	} else if (
-		wordJSON.type === "i" ||
-		wordJSON.type === "na" ||
-		wordJSON.type === "ira"
+		wordJSON.type === ADJ_TYPE.i ||
+		wordJSON.type === ADJ_TYPE.na ||
+		wordJSON.type === ADJ_TYPE.ira
 	) {
 		return PARTS_OF_SPEECH.adjective;
 	}
@@ -1085,12 +1009,7 @@ function getPartOfSpeech(wordJSON) {
 
 // Standard variations are affirmative, negative, plain, and polite
 // Returns an array of Conjugations
-function getStandardVariationConjugations(
-	wordJSON,
-	partOfSpeech,
-	conjugationType,
-	validBaseWordSpellings
-) {
+function getStandardVariationConjugations(wordJSON, partOfSpeech, conjugationType, validBaseWordSpellings) {
 	const conjugationObjects = [];
 	let affirmative = false,
 		polite = false;
@@ -1106,7 +1025,7 @@ function getStandardVariationConjugations(
 			affirmative &&
 			!polite &&
 			conjugationType === CONJUGATION_TYPES.present &&
-			wordJSON.type != "na"
+			wordJSON.type != ADJ_TYPE.na
 		)
 			continue;
 
@@ -1125,17 +1044,9 @@ function getStandardVariationConjugations(
 	return conjugationObjects;
 }
 
-function getConjugation(
-	wordJSON,
-	partOfSpeech,
-	conjugationType,
-	validBaseWordSpellings,
-	affirmative,
-	polite
-) {
+function getConjugation(wordJSON, partOfSpeech, conjugationType, validBaseWordSpellings, affirmative, polite) {
 	const validConjugatedAnswers = [];
-	const conjugationFunction =
-		conjugationFunctions[partOfSpeech][conjugationType];
+	const conjugationFunction = conjugationFunctions[partOfSpeech][conjugationType];
 
 	validBaseWordSpellings?.forEach((baseWord) => {
 		validConjugatedAnswers.push(
@@ -1510,7 +1421,7 @@ function typeToWordBoxColor(type) {
 			return "gray";
 		case "i":
 			return "rgb(0, 180, 240)";
-		case "na":
+		case ADJ_TYPE.na:
 			return "rgb(143, 73, 40)";
 	}
 }
@@ -1560,12 +1471,12 @@ function getSubConjugationForm(word, validAnswer) {
 	// Check for potential "れる" short form
 	if (
 		word.conjugation.type === CONJUGATION_TYPES.potential &&
-		(word.wordJSON.type === "ru" || kanjiWord === "来る")
+		(word.wordJSON.type === VERB_TYPE.ru || kanjiWord === "来る")
 	) {
 		const shortFormStems = [];
 
 		shortFormStems.push(dropFinalLetter(kanjiWord) + "れ");
-		if (word.wordJSON.type === "ru") {
+		if (word.wordJSON.type === VERB_TYPE.ru) {
 			shortFormStems.push(dropFinalLetter(hiraganaWord) + "れ");
 		} else if (kanjiWord === "来る") {
 			shortFormStems.push("これ");

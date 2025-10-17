@@ -35,9 +35,93 @@ const CONJUGATIONS = {
 }
 
 const ROMAJI = {
-	ru: "る",
+
+	a: "わ",
+	ka: "か",
+	ga: "が",
+	sa: "さ",
+	za: "ざ",
 	ta: "た",
-	na: "な"
+	da: "だ",
+	na: "な",
+	ha: "は",
+	ba: "ば",
+	pa: "ぱ",
+	ma: "ま",
+	ra: "ら",
+
+	i: "い",
+	ki: "き",
+	gi: "ぎ",
+	shi: "し",
+	ji: "じ",
+	chi: "ち",
+	zhi: "ぢ",
+	ni: "に",
+	hi: "ひ",
+	bi: "び",
+	pi: "ぴ",
+	mi: "み",
+	ri: "り",
+
+	u: "う",
+	ku: "く",
+	gu: "ぐ",
+	su: "す",
+	zu: "ず",
+	tsu: "つ",
+	tzu: "づ",
+	mu: "ぬ",
+	fu: "ふ",
+	bu: "ぶ",
+	pu: "ぷ",
+	mu: "む",
+	ru: "る",
+
+	e: "え",
+	ke: "け",
+	ge: "げ",
+	se: "せ",
+	ze: "ぜ",
+	te: "て",
+	de: "で",
+	ne: "ね",
+	he: "へ",
+	be: "べ",
+	pe: "ぺ",
+	me: "め",
+	re: "れ",
+
+	o: "お",
+	ko: "こ",
+	go: "ご",
+	so: "そ",
+	zo: "ぞ",
+	to: "と",
+	do: "ど",
+	no: "の",
+	ho: "ほ",
+	bo: "ぼ",
+	po: "ぽ",
+	mo: "も",
+	ro: "ろ",
+
+}
+
+class VerbConjugator {
+	static Split(baseVerbText) {
+		return baseVerbText;
+	}
+	static GetConjugation(stem, suffix) {
+
+	}
+}
+
+
+class AdjConjugator {
+	static GetConjugation(stem, suffix) {
+
+	}
 }
 
 const conjugationFunctions = {

@@ -7,16 +7,30 @@ export const VOWEL = Object.freeze({
 });
 
 const thing = {
-
     [ROMAJI.u]: {
         [VOWEL.a]: ROMAJI.a,
         [VOWEL.i]: ROMAJI.i,
         [VOWEL.e]: ROMAJI.e,
         [VOWEL.o]: ROMAJI.o
     },
-    [ROMAJI.ku]: {},
-    [ROMAJI.gu]: {},
-    [ROMAJI.su]: {},
+    [ROMAJI.ku]: {
+        [VOWEL.a]: ROMAJI.ka,
+        [VOWEL.i]: ROMAJI.ki,
+        [VOWEL.e]: ROMAJI.ke,
+        [VOWEL.o]: ROMAJI.ko
+    },
+    [ROMAJI.gu]: {
+        [VOWEL.a]: ROMAJI.ga,
+        [VOWEL.i]: ROMAJI.gi,
+        [VOWEL.e]: ROMAJI.ge,
+        [VOWEL.o]: ROMAJI.go
+    },
+    [ROMAJI.su]: {
+        [VOWEL.a]: ROMAJI.sa,
+        [VOWEL.i]: ROMAJI.shi,
+        [VOWEL.e]: ROMAJI.se,
+        [VOWEL.o]: ROMAJI.so
+    },
     [ROMAJI.zu]: {},
     [ROMAJI.tsu]: {},
     [ROMAJI.tzu]: {},

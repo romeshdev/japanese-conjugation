@@ -53,59 +53,7 @@ class Vowel {
         switch(target){
             case VOWEL.a:
             case VOWEL.i:
-                if (c === "う") {
-                    return "い";
-                } else if (c === "く") {
-                    return "き";
-                } else if (c === "ぐ") {
-                    return "ぎ";
-                } else if (c === "す") {
-                    return "し";
-                } else if (c === "ず") {
-                    return "じ";
-                } else if (c === "つ") {
-                    return "ち";
-                } else if (c === "づ") {
-                    return "ぢ";
-                } else if (c === "ぬ") {
-                    return "に";
-                } else if (c === "ふ") {
-                    return "ひ";
-                } else if (c === "ぶ") {
-                    return "び";
-                } else if (c === "ぷ") {
-                    return "ぴ";
-                } else if (c === "む") {
-                    return "み";
-                } else if (c === "る") {
-                    return "り";
             case VOWEL.e:
-                if (c === "う") {
-                    return "え";
-                } else if (c === "く") {
-                    return "け";
-                } else if (c === "ぐ") {
-                    return "げ";
-                } else if (c === "す") {
-                    return "せ";
-                } else if (c === "ず") {
-                    return "ぜ";
-                } else if (c === "つ") {
-                    return "て";
-                } else if (c === "づ") {
-                    return "で";
-                } else if (c === "ぬ") {
-                    return "ね";
-                } else if (c === "ふ") {
-                    return "へ";
-                } else if (c === "ぶ") {
-                    return "べ";
-                } else if (c === "ぷ") {
-                    return "ぺ";
-                } else if (c === "む") {
-                    return "め";
-                } else if (c === "る") {
-                    return "れ";
             case VOWEL.o:
             case VOWEL.u:
         }

@@ -7,39 +7,44 @@ export const VOWEL = Object.freeze({
 });
 
 const thing = {
-    [ROMAJI.u]: {
-        [VOWEL.a]: ROMAJI.a,
-        [VOWEL.i]: ROMAJI.i,
-        [VOWEL.e]: ROMAJI.e,
-        [VOWEL.o]: ROMAJI.o
+    [KANA.u]: {
+        [VOWEL.a]: KANA.a,
+        [VOWEL.i]: KANA.i,
+        [VOWEL.e]: KANA.e,
+        [VOWEL.o]: KANA.o
     },
-    [ROMAJI.ku]: {
-        [VOWEL.a]: ROMAJI.ka,
-        [VOWEL.i]: ROMAJI.ki,
-        [VOWEL.e]: ROMAJI.ke,
-        [VOWEL.o]: ROMAJI.ko
+    [KANA.ku]: {
+        [VOWEL.a]: KANA.ka,
+        [VOWEL.i]: KANA.ki,
+        [VOWEL.e]: KANA.ke,
+        [VOWEL.o]: KANA.ko
     },
-    [ROMAJI.gu]: {
-        [VOWEL.a]: ROMAJI.ga,
-        [VOWEL.i]: ROMAJI.gi,
-        [VOWEL.e]: ROMAJI.ge,
-        [VOWEL.o]: ROMAJI.go
+    [KANA.gu]: {
+        [VOWEL.a]: KANA.ga,
+        [VOWEL.i]: KANA.gi,
+        [VOWEL.e]: KANA.ge,
+        [VOWEL.o]: KANA.go
     },
-    [ROMAJI.su]: {
-        [VOWEL.a]: ROMAJI.sa,
-        [VOWEL.i]: ROMAJI.shi,
-        [VOWEL.e]: ROMAJI.se,
-        [VOWEL.o]: ROMAJI.so
+    [KANA.su]: {
+        [VOWEL.a]: KANA.sa,
+        [VOWEL.i]: KANA.shi,
+        [VOWEL.e]: KANA.se,
+        [VOWEL.o]: KANA.so
     },
-    [ROMAJI.zu]: {},
-    [ROMAJI.tsu]: {},
-    [ROMAJI.tzu]: {},
-    [ROMAJI.mu]: {},
-    [ROMAJI.fu]: {},
-    [ROMAJI.bu]: {},
-    [ROMAJI.pu]: {},
-    [ROMAJI.mu]: {},
-    [ROMAJI.ru]: {},
+    [KANA.zu]: {
+        [VOWEL.a]: KANA.a,
+        [VOWEL.i]: KANA.shi,
+        [VOWEL.e]: KANA.se,
+        [VOWEL.o]: KANA.so
+    },
+    [KANA.tsu]: {},
+    [KANA.tzu]: {},
+    [KANA.mu]: {},
+    [KANA.fu]: {},
+    [KANA.bu]: {},
+    [KANA.pu]: {},
+    [KANA.mu]: {},
+    [KANA.ru]: {},
     
 }
 
@@ -47,32 +52,6 @@ class Vowel {
     static Convert(vowel, target) {
         switch(target){
             case VOWEL.a:
-                if (c === "う") {
-                    return "わ";
-                } else if (c === "く") {
-                    return "か";
-                } else if (c === "ぐ") {
-                    return "が";
-                } else if (c === "す") {
-                    return "さ";
-                } else if (c === "ず") {
-                    return "ざ";
-                } else if (c === "つ") {
-                    return "た";
-                } else if (c === "づ") {
-                    return "だ";
-                } else if (c === "ぬ") {
-                    return "な";
-                } else if (c === "ふ") {
-                    return "は";
-                } else if (c === "ぶ") {
-                    return "ば";
-                } else if (c === "ぷ") {
-                    return "ぱ";
-                } else if (c === "む") {
-                    return "ま";
-                } else if (c === "る") {
-                    return "ら";
             case VOWEL.i:
                 if (c === "う") {
                     return "い";

@@ -7,6 +7,89 @@ const FORMS = {
 	te: "te"
 }
 
+export const VOWEL = Object.freeze({
+	a: "a",
+	i: "i",
+	e: "e",
+	o: "o",
+	u: "u"
+});
+
+export const CONVERT = Object.freeze({
+    [KANA.u]: {
+        [VOWEL.a]: KANA.a,
+        [VOWEL.i]: KANA.i,
+        [VOWEL.e]: KANA.e,
+        [VOWEL.o]: KANA.o
+    },
+    [KANA.ku]: {
+        [VOWEL.a]: KANA.ka,
+        [VOWEL.i]: KANA.ki,
+        [VOWEL.e]: KANA.ke,
+        [VOWEL.o]: KANA.ko
+    },
+    [KANA.gu]: {
+        [VOWEL.a]: KANA.ga,
+        [VOWEL.i]: KANA.gi,
+        [VOWEL.e]: KANA.ge,
+        [VOWEL.o]: KANA.go
+    },
+    [KANA.su]: {
+        [VOWEL.a]: KANA.sa,
+        [VOWEL.i]: KANA.shi,
+        [VOWEL.e]: KANA.se,
+        [VOWEL.o]: KANA.so
+    },
+    [KANA.zu]: {
+        [VOWEL.a]: KANA.za,
+        [VOWEL.i]: KANA.ji,
+        [VOWEL.e]: KANA.ze,
+        [VOWEL.o]: KANA.zo
+    },
+    [KANA.tsu]: {
+        [VOWEL.a]: KANA.ta,
+        [VOWEL.i]: KANA.chi,
+        [VOWEL.e]: KANA.te,
+        [VOWEL.o]: KANA.to
+    },
+    [KANA.tzu]: {
+        [VOWEL.a]: KANA.da,
+        [VOWEL.i]: KANA.zhi,
+        [VOWEL.e]: KANA.ze,
+        [VOWEL.o]: KANA.zo
+    },
+    [KANA.mu]: {
+        [VOWEL.a]: KANA.ma,
+        [VOWEL.i]: KANA.mi,
+        [VOWEL.e]: KANA.me,
+        [VOWEL.o]: KANA.mo
+    },
+    [KANA.fu]: {
+        [VOWEL.a]: KANA.ha,
+        [VOWEL.i]: KANA.hi,
+        [VOWEL.e]: KANA.he,
+        [VOWEL.o]: KANA.ho
+    },
+    [KANA.bu]: {
+        [VOWEL.a]: KANA.ba,
+        [VOWEL.i]: KANA.bi,
+        [VOWEL.e]: KANA.be,
+        [VOWEL.o]: KANA.bo
+    },
+    [KANA.pu]: {
+        [VOWEL.a]: KANA.pa,
+        [VOWEL.i]: KANA.pi,
+        [VOWEL.e]: KANA.pe,
+        [VOWEL.o]: KANA.po
+    },
+    [KANA.ru]: {
+        [VOWEL.a]: KANA.ra,
+        [VOWEL.i]: KANA.ri,
+        [VOWEL.e]: KANA.re,
+        [VOWEL.o]: KANA.ro
+    }
+});
+
 const uFormMap = {
 	[FORMS.masu]: {
 		["u"]: "i",
@@ -21,22 +104,28 @@ const uFormMap = {
 	}
 }
 
-const CONJUGATIONS = {
+const CONJUGATION_SUFFIX = {
 	desu: "です",
 	deshita: "でした",
 
 	masu: "ます",
 	mashita: "ました",
 	masen: "ません",
-	masendeshita: "ませんでした",
+	masendeshita: `${this.masen}${this.deshita}`,
 
 	katta: "かった",
-	nai: "ない"
+	kunakatta: `くな${this.katta}`,
+
+	nai: "ない",
+	kunai: `く${this.nai}`
 }
 
-const ROMAJI = {
+const KANA = {
 
-	a: "わ",
+	wa: "わ",
+
+
+	a: "あ",
 	ka: "か",
 	ga: "が",
 	sa: "さ",
@@ -70,7 +159,7 @@ const ROMAJI = {
 	su: "す",
 	zu: "ず",
 	tsu: "つ",
-	tzu: "づ",
+	dzu: "づ",
 	mu: "ぬ",
 	fu: "ふ",
 	bu: "ぶ",
@@ -130,22 +219,22 @@ const conjugationFunctions = {
 			[VERB_TYPE.irv]: irregularVerbConjugation(baseVerbText, affirmative, polite, CONJUGATION_TYPES.present),
 			[VERB_TYPE.ru]: {
 				[FORMAILTY.polite]: {
-					[INTENTION.positive]: _ => CONJUGATIONS.masu,
-					[INTENTION.negative]: _ => CONJUGATIONS.masen
+					[INTENTION.positive]: _ => CONJUGATION_SUFFIX.masu,
+					[INTENTION.negative]: _ => CONJUGATION_SUFFIX.masen
 				},
 				[FORMAILTY.casual]: {
-					[INTENTION.positive]: _ => ROMAJI.ru,
-					[INTENTION.negative]: _ => CONJUGATIONS.nai
+					[INTENTION.positive]: _ => KANA.ru,
+					[INTENTION.negative]: _ => CONJUGATION_SUFFIX.nai
 				}
 			},
 			[VERB_TYPE.u]: {
 				[FORMAILTY.polite]: {
-					[INTENTION.positive]: (char) => uFormMap[FORMS.masu][char] + CONJUGATIONS.masu,
-					[INTENTION.negative]: (char) => [`${uFormMap[FORMS.masu][char]}${CONJUGATIONS.masen}`, `${uFormMap[FORMS.nai][char]}${CONJUGATIONS.nai}${CONJUGATIONS.desu}`]
+					[INTENTION.positive]: (char) => uFormMap[FORMS.masu][char] + CONJUGATION_SUFFIX.masu,
+					[INTENTION.negative]: (char) => [`${uFormMap[FORMS.masu][char]}${CONJUGATION_SUFFIX.masen}`, `${uFormMap[FORMS.nai][char]}${CONJUGATION_SUFFIX.nai}${CONJUGATION_SUFFIX.desu}`]
 				},
 				[FORMAILTY.casual]: {
 					[INTENTION.positive]: (char) => char,
-					[INTENTION.negative]: (char) => uFormMap[FORMS.nai][char] + CONJUGATIONS.nai
+					[INTENTION.negative]: (char) => uFormMap[FORMS.nai][char] + CONJUGATION_SUFFIX.nai
 				}
 			},
 		},
@@ -153,22 +242,22 @@ const conjugationFunctions = {
 			[VERB_TYPE.irv]: irregularVerbConjugation(baseVerbText, affirmative, polite, CONJUGATION_TYPES.past),
 			[VERB_TYPE.ru]: {
 				[FORMAILTY.polite]: {
-					[INTENTION.positive]: _ => CONJUGATIONS.mashita,
-					[INTENTION.negative]: _ => CONJUGATIONS.masendeshita
+					[INTENTION.positive]: _ => CONJUGATION_SUFFIX.mashita,
+					[INTENTION.negative]: _ => CONJUGATION_SUFFIX.masendeshita
 				},
 				[FORMAILTY.casual]: {
-					[INTENTION.positive]: _ => ROMAJI.ta,
-					[INTENTION.negative]: _ => ROMAJI.na + CONJUGATIONS.katta
+					[INTENTION.positive]: _ => KANA.ta,
+					[INTENTION.negative]: _ => KANA.na + CONJUGATION_SUFFIX.katta
 				}
 			},
 			[VERB_TYPE.u]: {
 				[FORMAILTY.polite]: {
-					[INTENTION.positive]: (char) => uFormMap[FORMS.masu][char] + CONJUGATIONS.mashita,
-					[INTENTION.negative]: (char) => [`${uFormMap[FORMS.masu][char]}${CONJUGATIONS.masendeshita}`, `${uFormMap[FORMS.nai][char]}${ROMAJI.na}${CONJUGATIONS.katta}${CONJUGATIONS.desu}`]
+					[INTENTION.positive]: (char) => uFormMap[FORMS.masu][char] + CONJUGATION_SUFFIX.mashita,
+					[INTENTION.negative]: (char) => [`${uFormMap[FORMS.masu][char]}${CONJUGATION_SUFFIX.masendeshita}`, `${uFormMap[FORMS.nai][char]}${KANA.na}${CONJUGATION_SUFFIX.katta}${CONJUGATION_SUFFIX.desu}`]
 				},
 				[FORMAILTY.casual]: {
 					[INTENTION.positive]: (char) => char,// Ta form map
-					[INTENTION.negative]: (char) => uFormMap[FORMS.nai][char] + CONJUGATIONS.nai
+					[INTENTION.negative]: (char) => uFormMap[FORMS.nai][char] + CONJUGATION_SUFFIX.nai
 				}
 			},
 		},

@@ -7,6 +7,8 @@ export const VERB_TYPE = Object.freeze({
 	u: "u",
 	ru: "ru",
 	irv: "irv",
+	ichidan: this.ru,
+	godan: this.u
 });
 
 export const ADJ_TYPE = Object.freeze({

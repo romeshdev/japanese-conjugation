@@ -15,78 +15,78 @@ export const VOWEL = Object.freeze({
 	u: "u"
 });
 
-export const CONVERT = Object.freeze({
+export const ICHIDAN_SUFFIX_CONVERT = Object.freeze({
     [KANA.u]: {
-        [VOWEL.a]: KANA.a,
-        [VOWEL.i]: KANA.i,
-        [VOWEL.e]: KANA.e,
-        [VOWEL.o]: KANA.o
+        [KANA.a]: KANA.a,
+        [KANA.i]: KANA.i,
+        [KANA.e]: KANA.e,
+        [KANA.o]: KANA.o
     },
     [KANA.ku]: {
-        [VOWEL.a]: KANA.ka,
-        [VOWEL.i]: KANA.ki,
-        [VOWEL.e]: KANA.ke,
-        [VOWEL.o]: KANA.ko
+        [KANA.a]: KANA.ka,
+        [KANA.i]: KANA.ki,
+        [KANA.e]: KANA.ke,
+        [KANA.o]: KANA.ko
     },
     [KANA.gu]: {
-        [VOWEL.a]: KANA.ga,
-        [VOWEL.i]: KANA.gi,
-        [VOWEL.e]: KANA.ge,
-        [VOWEL.o]: KANA.go
+        [KANA.a]: KANA.ga,
+        [KANA.i]: KANA.gi,
+        [KANA.e]: KANA.ge,
+        [KANA.o]: KANA.go
     },
     [KANA.su]: {
-        [VOWEL.a]: KANA.sa,
-        [VOWEL.i]: KANA.shi,
-        [VOWEL.e]: KANA.se,
-        [VOWEL.o]: KANA.so
+        [KANA.a]: KANA.sa,
+        [KANA.i]: KANA.shi,
+        [KANA.e]: KANA.se,
+        [KANA.o]: KANA.so
     },
     [KANA.zu]: {
-        [VOWEL.a]: KANA.za,
-        [VOWEL.i]: KANA.ji,
-        [VOWEL.e]: KANA.ze,
-        [VOWEL.o]: KANA.zo
+        [KANA.a]: KANA.za,
+        [KANA.i]: KANA.ji,
+        [KANA.e]: KANA.ze,
+        [KANA.o]: KANA.zo
     },
     [KANA.tsu]: {
-        [VOWEL.a]: KANA.ta,
-        [VOWEL.i]: KANA.chi,
-        [VOWEL.e]: KANA.te,
-        [VOWEL.o]: KANA.to
+        [KANA.a]: KANA.ta,
+        [KANA.i]: KANA.chi,
+        [KANA.e]: KANA.te,
+        [KANA.o]: KANA.to
     },
     [KANA.tzu]: {
-        [VOWEL.a]: KANA.da,
-        [VOWEL.i]: KANA.zhi,
-        [VOWEL.e]: KANA.ze,
-        [VOWEL.o]: KANA.zo
+        [KANA.a]: KANA.da,
+        [KANA.i]: KANA.zhi,
+        [KANA.e]: KANA.ze,
+        [KANA.o]: KANA.zo
     },
     [KANA.mu]: {
-        [VOWEL.a]: KANA.ma,
-        [VOWEL.i]: KANA.mi,
-        [VOWEL.e]: KANA.me,
-        [VOWEL.o]: KANA.mo
+        [KANA.a]: KANA.ma,
+        [KANA.i]: KANA.mi,
+        [KANA.e]: KANA.me,
+        [KANA.o]: KANA.mo
     },
     [KANA.fu]: {
-        [VOWEL.a]: KANA.ha,
-        [VOWEL.i]: KANA.hi,
-        [VOWEL.e]: KANA.he,
-        [VOWEL.o]: KANA.ho
+        [KANA.a]: KANA.ha,
+        [KANA.i]: KANA.hi,
+        [KANA.e]: KANA.he,
+        [KANA.o]: KANA.ho
     },
     [KANA.bu]: {
-        [VOWEL.a]: KANA.ba,
-        [VOWEL.i]: KANA.bi,
-        [VOWEL.e]: KANA.be,
-        [VOWEL.o]: KANA.bo
+        [KANA.a]: KANA.ba,
+        [KANA.i]: KANA.bi,
+        [KANA.e]: KANA.be,
+        [KANA.o]: KANA.bo
     },
     [KANA.pu]: {
-        [VOWEL.a]: KANA.pa,
-        [VOWEL.i]: KANA.pi,
-        [VOWEL.e]: KANA.pe,
-        [VOWEL.o]: KANA.po
+        [KANA.a]: KANA.pa,
+        [KANA.i]: KANA.pi,
+        [KANA.e]: KANA.pe,
+        [KANA.o]: KANA.po
     },
     [KANA.ru]: {
-        [VOWEL.a]: KANA.ra,
-        [VOWEL.i]: KANA.ri,
-        [VOWEL.e]: KANA.re,
-        [VOWEL.o]: KANA.ro
+        [KANA.a]: KANA.ra,
+        [KANA.i]: KANA.ri,
+        [KANA.e]: KANA.re,
+        [KANA.o]: KANA.ro
     }
 });
 
@@ -105,6 +105,28 @@ const uFormMap = {
 }
 
 const CONJUGATION_SUFFIX = {
+	// [PARTS_OF_SPEECH.verb]: {
+	// 	[FORMAILTY.polite]: {
+	// 		[CONJUGATION_TYPES.present]: {
+	// 			[INTENTION.positive]: this.masu,
+	// 			[INTENTION.negative]: this.mashita
+	// 		},
+	// 		[CONJUGATION_TYPES.past]: {
+	// 			[INTENTION.positive]: this.masen,
+	// 			[INTENTION.negative]: this.masendeshita
+	// 		}
+	// 	},
+	// 	[FORMAILTY.casual]: {
+	// 		[CONJUGATION_TYPES.present]: {
+	// 			[INTENTION.positive]: '',
+	// 			[INTENTION.negative]: this.nai
+	// 		},
+	// 		[CONJUGATION_TYPES.past]: {
+	// 			[INTENTION.positive]: this.desu,
+	// 			[INTENTION.negative]: this.deshita
+	// 		}
+	// 	},
+	// },
 	desu: "です",
 	deshita: "でした",
 
@@ -197,22 +219,6 @@ const KANA = {
 
 }
 
-class VerbConjugator {
-	static Split(baseVerbText) {
-		return baseVerbText;
-	}
-	static GetConjugation(stem, suffix) {
-
-	}
-}
-
-
-class AdjConjugator {
-	static GetConjugation(stem, suffix) {
-
-	}
-}
-
 const conjugationFunctions = {
 	[PARTS_OF_SPEECH.verb]: {
 		[CONJUGATION_TYPES.present]: {
@@ -229,8 +235,11 @@ const conjugationFunctions = {
 			},
 			[VERB_TYPE.u]: {
 				[FORMAILTY.polite]: {
-					[INTENTION.positive]: (char) => uFormMap[FORMS.masu][char] + CONJUGATION_SUFFIX.masu,
-					[INTENTION.negative]: (char) => [`${uFormMap[FORMS.masu][char]}${CONJUGATION_SUFFIX.masen}`, `${uFormMap[FORMS.nai][char]}${CONJUGATION_SUFFIX.nai}${CONJUGATION_SUFFIX.desu}`]
+					[INTENTION.positive]: (char) => ICHIDAN_SUFFIX_CONVERT[char][KANA.i] + CONJUGATION_SUFFIX.masu,
+					[INTENTION.negative]: (char) => [
+						`${ICHIDAN_SUFFIX_CONVERT[char][KANA.i]}${CONJUGATION_SUFFIX.masen}`, 
+						`${ICHIDAN_SUFFIX_CONVERT[char][KANA.i]}${CONJUGATION_SUFFIX.nai}${CONJUGATION_SUFFIX.desu}`
+					]
 				},
 				[FORMAILTY.casual]: {
 					[INTENTION.positive]: (char) => char,

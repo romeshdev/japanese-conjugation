@@ -7,126 +7,181 @@ const FORMS = {
 	te: "te"
 }
 
-export const VOWEL = Object.freeze({
-	a: "a",
-	i: "i",
-	e: "e",
-	o: "o",
-	u: "u"
-});
+const IRV = {
+	iku: "いく",
+	suru: "する",
+	kuru: "くる",
+	aru: "ある",
+	tou: "とう"
+}
 
-export const ICHIDAN_SUFFIX_CONVERT = Object.freeze({
-    [KANA.u]: {
-        [KANA.a]: KANA.a,
-        [KANA.i]: KANA.i,
-        [KANA.e]: KANA.e,
-        [KANA.o]: KANA.o
-    },
-    [KANA.ku]: {
-        [KANA.a]: KANA.ka,
-        [KANA.i]: KANA.ki,
-        [KANA.e]: KANA.ke,
-        [KANA.o]: KANA.ko
-    },
-    [KANA.gu]: {
-        [KANA.a]: KANA.ga,
-        [KANA.i]: KANA.gi,
-        [KANA.e]: KANA.ge,
-        [KANA.o]: KANA.go
-    },
-    [KANA.su]: {
-        [KANA.a]: KANA.sa,
-        [KANA.i]: KANA.shi,
-        [KANA.e]: KANA.se,
-        [KANA.o]: KANA.so
-    },
-    [KANA.zu]: {
-        [KANA.a]: KANA.za,
-        [KANA.i]: KANA.ji,
-        [KANA.e]: KANA.ze,
-        [KANA.o]: KANA.zo
-    },
-    [KANA.tsu]: {
-        [KANA.a]: KANA.ta,
-        [KANA.i]: KANA.chi,
-        [KANA.e]: KANA.te,
-        [KANA.o]: KANA.to
-    },
-    [KANA.tzu]: {
-        [KANA.a]: KANA.da,
-        [KANA.i]: KANA.zhi,
-        [KANA.e]: KANA.ze,
-        [KANA.o]: KANA.zo
-    },
-    [KANA.mu]: {
-        [KANA.a]: KANA.ma,
-        [KANA.i]: KANA.mi,
-        [KANA.e]: KANA.me,
-        [KANA.o]: KANA.mo
-    },
-    [KANA.fu]: {
-        [KANA.a]: KANA.ha,
-        [KANA.i]: KANA.hi,
-        [KANA.e]: KANA.he,
-        [KANA.o]: KANA.ho
-    },
-    [KANA.bu]: {
-        [KANA.a]: KANA.ba,
-        [KANA.i]: KANA.bi,
-        [KANA.e]: KANA.be,
-        [KANA.o]: KANA.bo
-    },
-    [KANA.pu]: {
-        [KANA.a]: KANA.pa,
-        [KANA.i]: KANA.pi,
-        [KANA.e]: KANA.pe,
-        [KANA.o]: KANA.po
-    },
-    [KANA.ru]: {
-        [KANA.a]: KANA.ra,
-        [KANA.i]: KANA.ri,
-        [KANA.e]: KANA.re,
-        [KANA.o]: KANA.ro
-    }
-});
-
-const uFormMap = {
-	[FORMS.masu]: {
-		["u"]: "i",
-		["ru"]: "ri",
-		["su"]: "shi"
-	},
-	
-	[FORMS.nai]: {
-		["u"]: "wa",
-		["ru"]: "ra",
-		["su"]: "sa"
+class Verb
+{
+	irregularStems = ["いく", "行く", "する", "くる", "来る", "ある", "とう", "問う"];
+	constuctor(rawVerb, type) {
+		this.rawVerb = rawVerb
+		this.type = type
+		if (type === VERB_TYPE.irv) {
+			for (let irrStem of this.irregularStems) {
+				if(rawVerb.endsWith(irrStem)) {
+					this.base = this.rawVerb.substring(0, this.rawVerb.length - irrStem.length);
+					this.stem = irrStem;
+					break;
+				}
+			}
+		} else if(type === VERB_TYPE.ru){
+			this.base = this.rawVerb.substring(0, this.rawVerb.length - 1)
+			this.stem = '';
+		} else {
+			this.base = this.rawVerb.substring(0, this.rawVerb.length - 1)
+			this.stem = this.rawVerb.charAt(this.rawVerb.length - 1);
+		}
 	}
 }
 
-const CONJUGATION_SUFFIX = {
-	// [PARTS_OF_SPEECH.verb]: {
-	// 	[FORMAILTY.polite]: {
-	// 		[CONJUGATION_TYPES.present]: {
-	// 			[INTENTION.positive]: this.masu,
-	// 			[INTENTION.negative]: this.mashita
-	// 		},
-	// 		[CONJUGATION_TYPES.past]: {
-	// 			[INTENTION.positive]: this.masen,
-	// 			[INTENTION.negative]: this.masendeshita
-	// 		}
-	// 	},
-	// 	[FORMAILTY.casual]: {
-	// 		[CONJUGATION_TYPES.present]: {
-	// 			[INTENTION.positive]: '',
-	// 			[INTENTION.negative]: this.nai
-	// 		},
-	// 		[CONJUGATION_TYPES.past]: {
-	// 			[INTENTION.positive]: this.desu,
-	// 			[INTENTION.negative]: this.deshita
-	// 		}
-	// 	},
-	// },
+class VerbConjugator {
+	/**
+	* @param {Verb} verb the verb to conjugate
+	*/
+	static Conjugate(verb, conjugation, tense, formality) {
+		let conjugator = conjugationFunctions[PARTS_OF_SPEECH.verb][conjugation][verb.type];
+		let conjugation = conjugator[tense][formality](verb.stem)
+		return verb.base + conjugation;
+	}
+}
+
+function changeToPastPlain(c) {
+	switch(c){
+		case "す":
+			return "した";
+		case "く":
+			return "いた";
+		case "ぐ":
+			return "いだ";
+		case "す":
+			return "した";
+		case "む":
+		case "ぶ":
+		case "ぬ":
+			return "んだ";
+		case "る":
+		case "う":
+		case "つ":
+			return "った";
+	}
+}
+
+export const TA_FORMS = Object.freeze({
+	ta: KANA.ta,
+	tta: "った",
+    nda: "んだ",
+
+    ita: "いた",
+	ida: "いだ",
+    shita: "した",
+    kita: "きた",
+});
+
+export const TA_FORM = Object.freeze({
+	[KANA.u]: TA_FORMS.tta,
+    [KANA.tsu]: TA_FORMS.tta,
+    [KANA.ru]: TA_FORMS.tta,
+
+    [KANA.mu]: TA_FORMS.nda,
+    [KANA.bu]: TA_FORMS.nda,
+    [KANA.nu]: TA_FORMS.nda,
+
+    [KANA.ku]: TA_FORMS.ita,
+    [KANA.gu]: TA_FORMS.ida,
+
+	
+    [IRV.iku]: TA_FORMS.ita,
+    [IRV.suru]: TA_FORMS.shita,
+    [IRV.kuru]: TA_FORMS.kita,
+});
+
+export const STEM_CONVERT = Object.freeze({
+    [KANA.u]: {
+        [STEM.a]: KANA.wa,
+        [STEM.i]: KANA.i,
+        [STEM.e]: KANA.e,
+        [STEM.o]: KANA.o
+    },
+    [KANA.ku]: {
+        [STEM.a]: KANA.ka,
+        [STEM.i]: KANA.ki,
+        [STEM.e]: KANA.ke,
+        [STEM.o]: KANA.ko
+    },
+    [KANA.gu]: {
+        [STEM.a]: KANA.ga,
+        [STEM.i]: KANA.gi,
+        [STEM.e]: KANA.ge,
+        [STEM.o]: KANA.go
+    },
+    [KANA.su]: {
+        [STEM.a]: KANA.sa,
+        [STEM.i]: KANA.shi,
+        [STEM.e]: KANA.se,
+        [STEM.o]: KANA.so
+    },
+    [KANA.zu]: {
+        [STEM.a]: KANA.za,
+        [STEM.i]: KANA.ji,
+        [STEM.e]: KANA.ze,
+        [STEM.o]: KANA.zo
+    },
+    [KANA.tsu]: {
+        [STEM.a]: KANA.ta,
+        [STEM.i]: KANA.chi,
+        [STEM.e]: KANA.te,
+        [STEM.o]: KANA.to
+    },
+    [KANA.tzu]: {
+        [STEM.a]: KANA.da,
+        [STEM.i]: KANA.zhi,
+        [STEM.e]: KANA.ze,
+        [STEM.o]: KANA.zo
+    },
+    [KANA.mu]: {
+        [STEM.a]: KANA.ma,
+        [STEM.i]: KANA.mi,
+        [STEM.e]: KANA.me,
+        [STEM.o]: KANA.mo
+    },
+    [KANA.nu]: {
+        [STEM.a]: KANA.na,
+        [STEM.i]: KANA.ni,
+        [STEM.e]: KANA.ne,
+        [STEM.o]: KANA.no
+    },
+    [KANA.fu]: {
+        [STEM.a]: KANA.ha,
+        [STEM.i]: KANA.hi,
+        [STEM.e]: KANA.he,
+        [STEM.o]: KANA.ho
+    },
+    [KANA.bu]: {
+        [STEM.a]: KANA.ba,
+        [STEM.i]: KANA.bi,
+        [STEM.e]: KANA.be,
+        [STEM.o]: KANA.bo
+    },
+    [KANA.pu]: {
+        [STEM.a]: KANA.pa,
+        [STEM.i]: KANA.pi,
+        [STEM.e]: KANA.pe,
+        [STEM.o]: KANA.po
+    },
+    [KANA.ru]: {
+        [STEM.a]: KANA.ra,
+        [STEM.i]: KANA.ri,
+        [STEM.e]: KANA.re,
+        [STEM.o]: KANA.ro
+    }
+});
+
+export const SUFFIX = Object.freeze({
 	desu: "です",
 	deshita: "でした",
 
@@ -140,9 +195,17 @@ const CONJUGATION_SUFFIX = {
 
 	nai: "ない",
 	kunai: `く${this.nai}`
-}
+});
 
-const KANA = {
+export const STEM = Object.freeze({
+	a: KANA.a,
+	i: KANA.i,
+	e: KANA.e,
+	o: KANA.o,
+	u: KANA.u
+});
+
+export const KANA = Object.freeze({
 
 	wa: "わ",
 
@@ -217,7 +280,7 @@ const KANA = {
 	mo: "も",
 	ro: "ろ",
 
-}
+});
 
 const conjugationFunctions = {
 	[PARTS_OF_SPEECH.verb]: {
@@ -225,25 +288,25 @@ const conjugationFunctions = {
 			[VERB_TYPE.irv]: irregularVerbConjugation(baseVerbText, affirmative, polite, CONJUGATION_TYPES.present),
 			[VERB_TYPE.ru]: {
 				[FORMAILTY.polite]: {
-					[INTENTION.positive]: _ => CONJUGATION_SUFFIX.masu,
-					[INTENTION.negative]: _ => CONJUGATION_SUFFIX.masen
+					[INTENTION.positive]: _ => [SUFFIX.masu],
+					[INTENTION.negative]: _ => [SUFFIX.masen]
 				},
 				[FORMAILTY.casual]: {
-					[INTENTION.positive]: _ => KANA.ru,
-					[INTENTION.negative]: _ => CONJUGATION_SUFFIX.nai
+					[INTENTION.positive]: _ => [KANA.ru],
+					[INTENTION.negative]: _ => [SUFFIX.nai]
 				}
 			},
 			[VERB_TYPE.u]: {
 				[FORMAILTY.polite]: {
-					[INTENTION.positive]: (char) => ICHIDAN_SUFFIX_CONVERT[char][KANA.i] + CONJUGATION_SUFFIX.masu,
-					[INTENTION.negative]: (char) => [
-						`${ICHIDAN_SUFFIX_CONVERT[char][KANA.i]}${CONJUGATION_SUFFIX.masen}`, 
-						`${ICHIDAN_SUFFIX_CONVERT[char][KANA.i]}${CONJUGATION_SUFFIX.nai}${CONJUGATION_SUFFIX.desu}`
+					[INTENTION.positive]: (stem) => [`${STEM_CONVERT[stem][KANA.i]}${SUFFIX.masu}`],
+					[INTENTION.negative]: (stem) => [
+						`${STEM_CONVERT[stem][KANA.i]}${SUFFIX.masen}`, 
+						`${STEM_CONVERT[stem][KANA.a]}${SUFFIX.nai}${SUFFIX.desu}`
 					]
 				},
 				[FORMAILTY.casual]: {
-					[INTENTION.positive]: (char) => char,
-					[INTENTION.negative]: (char) => uFormMap[FORMS.nai][char] + CONJUGATION_SUFFIX.nai
+					[INTENTION.positive]: (stem) => [stem],
+					[INTENTION.negative]: (stem) => [`${STEM_CONVERT[stem][KANA.a]}${SUFFIX.nai}`]
 				}
 			},
 		},
@@ -251,50 +314,27 @@ const conjugationFunctions = {
 			[VERB_TYPE.irv]: irregularVerbConjugation(baseVerbText, affirmative, polite, CONJUGATION_TYPES.past),
 			[VERB_TYPE.ru]: {
 				[FORMAILTY.polite]: {
-					[INTENTION.positive]: _ => CONJUGATION_SUFFIX.mashita,
-					[INTENTION.negative]: _ => CONJUGATION_SUFFIX.masendeshita
+					[INTENTION.positive]: _ => [SUFFIX.mashita],
+					[INTENTION.negative]: _ => [SUFFIX.masendeshita]
 				},
 				[FORMAILTY.casual]: {
-					[INTENTION.positive]: _ => KANA.ta,
-					[INTENTION.negative]: _ => KANA.na + CONJUGATION_SUFFIX.katta
+					[INTENTION.positive]: _ => [KANA.ta],
+					[INTENTION.negative]: _ => [KANA.na + SUFFIX.katta]
 				}
 			},
 			[VERB_TYPE.u]: {
 				[FORMAILTY.polite]: {
-					[INTENTION.positive]: (char) => uFormMap[FORMS.masu][char] + CONJUGATION_SUFFIX.mashita,
-					[INTENTION.negative]: (char) => [`${uFormMap[FORMS.masu][char]}${CONJUGATION_SUFFIX.masendeshita}`, `${uFormMap[FORMS.nai][char]}${KANA.na}${CONJUGATION_SUFFIX.katta}${CONJUGATION_SUFFIX.desu}`]
+					[INTENTION.positive]: (stem) => [`${STEM_CONVERT[stem][KANA.i]}${SUFFIX.mashita}`],
+					[INTENTION.negative]: (stem) => [
+						`${STEM_CONVERT[stem][KANA.i]}${SUFFIX.masen}${SUFFIX.deshita}`, 
+						`${STEM_CONVERT[stem][KANA.a]}${KANA.na}${SUFFIX.katta}${SUFFIX.desu}`
+					]
 				},
 				[FORMAILTY.casual]: {
-					[INTENTION.positive]: (char) => char,// Ta form map
-					[INTENTION.negative]: (char) => uFormMap[FORMS.nai][char] + CONJUGATION_SUFFIX.nai
+					[INTENTION.positive]: (stem) => TA_FORMS[stem],
+					[INTENTION.negative]: (stem) => `${STEM_CONVERT[stem][KANA.a]}${KANA.na}${SUFFIX.katta}`
 				}
 			},
-		},
-		
-		function (baseVerbText, type, affirmative, polite) {
-			if (type == VERB_TYPE.irv)
-				return irregularVerbConjugation(baseVerbText, affirmative, polite, CONJUGATION_TYPES.past);
-			
-			if (affirmative && polite)
-				return masuStem(baseVerbText, type) + "ました";
-			
-			if (affirmative && !polite && type == VERB_TYPE.u)
-				return (dropFinalLetter(baseVerbText) + changeToPastPlain(baseVerbText.charAt(baseVerbText.length - 1)));
-			
-			if (affirmative && !polite && type == VERB_TYPE.ru)
-				return masuStem(baseVerbText, type) + "た";
-
-			if (!affirmative && polite) {
-				let plainNegative = plainNegativeComplete(baseVerbText, type);
-				let plainNegativePast = dropFinalLetter(plainNegative) + "かった";
-				return [
-					masuStem(baseVerbText, type) + "ませんでした",
-					plainNegativePast + "です",
-				];
-			}
-
-			if (!affirmative && !polite)
-				return dropFinalLetter(plainNegativeComplete(baseVerbText, type)) + "かった";
 		},
 		[CONJUGATION_TYPES.te]: function (baseVerbText, type) {
 			if (type == VERB_TYPE.irv) {
